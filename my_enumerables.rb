@@ -30,5 +30,4 @@ module Enumerable
     end
     arr
   end
-
 end
