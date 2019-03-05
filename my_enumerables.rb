@@ -44,12 +44,17 @@ module Enumerable
     true
   end
 
-  def my_count(arg)
+  def my_count(arg = nil)
     c = 0
-    my_each { |item| c += 1 if yield(item) == true } if block_given?
-    # my_each { |item| item == arg } if !block_given?
+    if block_given?
+      my_each { |item| c += 1 if yield(item) == true }
+    else
+      return length if arg.nil?
+
+      my_each { |item| c += 1 if item == arg }
+    end
     c
-  end 
+  end
 
   def my_map
     return to_enum unless block_given?
