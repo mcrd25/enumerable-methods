@@ -28,19 +28,19 @@ module Enumerable
 
   def my_all?
     my_each { |item| return false if yield(item) == false } if block_given?
-    my_each { |item| return false if !item } if !block_given?
+    my_each { |item| return false unless item } unless block_given?
     true
   end
 
   def my_any?
     my_each { |item| return true if yield(item) == true } if block_given?
-    my_each { |item| return true if item } if !block_given?
+    my_each { |item| return true if item } unless block_given?
     false
   end
 
   def my_none?
     my_each { |item| return false if yield(item) != false } if block_given?
-    my_each { |item| return false if item } if !block_given?
+    my_each { |item| return false if item } unless block_given?
     true
   end
 
@@ -56,14 +56,24 @@ module Enumerable
     c
   end
 
-  def my_map
-    return to_enum unless block_given?
-
+  def my_map(proc = nil)
     arr = []
-    my_each { |item| arr << yield(item) }
+    my_each { |item| arr << proc.call(item) } unless proc.nil?
+    if block_given?
+      my_each { |item| arr << yield(item) }
+    else
+      return to_enum unless proc
+    end  
     arr
   end
 
-  def my_inject
-  end  
+  def my_inject(accumulator = nil)
+    accumulator ||= self[0]
+    my_each { |item| accumulator = yield(accumulator, item) } if block_given?
+    accumulator
+  end
+
+  def multiply_els
+    my_inject(1) { |total, item| total * item }
+  end
 end
