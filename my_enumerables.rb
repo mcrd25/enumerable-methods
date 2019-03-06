@@ -62,7 +62,7 @@ module Enumerable
     if block_given?
       my_each { |item| arr << yield(item) }
     else
-      return to_enum unless proc
+      return to_enum :my_map unless proc
     end  
     arr
   end
