@@ -88,15 +88,6 @@ module Enumerable
 
   def my_inject(arg1 = nil, arg2 = nil)
     new_self = is_a?(Range) ? to_a : self
-    # accumulator ||= new_self[0]
-    # if block_given?
-    #   new_self[1..-1].my_each { |item| accumulator = yield(accumulator, item) }
-    # elsif sym
-    #   new_self[1..-1].my_each do |i|
-    #     accumulator = accumulator.send(sym, i)
-    #   end
-    # end
-    # accumulator
     accumulator = (arg1.nil? || arg1.is_a?(Symbol)) ? new_self[0] : arg1
     new_self.my_each { |item| accumulator = yield(accumulator, item) } if block_given?
     new_self[1..-1].my_each { |i| accumulator = accumulator.send(arg1, i) } if arg1.is_a?(Symbol)
