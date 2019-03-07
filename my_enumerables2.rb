@@ -1,6 +1,7 @@
 module Enumerable
   def my_each
     return to_enum unless block_given?
+
     if self.class == Range
         new_self = self.to_a
     else 
@@ -24,7 +25,7 @@ module Enumerable
   end  
 
   def my_select 
-    # return to_enum unless block_given?
+    return to_enum unless block_given?
     return_arr = []
     self.my_each { |item| return_arr << item if yield(item) }
     return_arr
@@ -75,7 +76,7 @@ module Enumerable
   def my_map
     return to_enum unless block_given?
     return_arr = []
-    my_each {|item| arr.push << yield(item) }
+    my_each {|item| return_arr << yield(item) }
     return_arr
   end
 

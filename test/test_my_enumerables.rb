@@ -38,8 +38,8 @@ class MyEnumerablesTest < Minitest::Test
     assert_equal(%w[ant bear cat].my_all? { |word| word.length >= 4 }, %w[ant bear cat].all? { |word| word.length >= 4 })
     assert_equal([nil, true, 99].my_all?, [nil, true, 99].all?)
     assert_equal([].my_all?, [].all?)
-    #assert_equal([1, 2i, 3.14].my_all?(Numeric), [1, 2i, 3.14].all?(Numeric))
-    #assert_equal(%w[ant bear cat].my_all?(/t/), %w[ant bear cat].all?(/t/))
+    assert_equal([1, 2i, 3.14].my_all?(Numeric), [1, 2i, 3.14].all?(Numeric))
+    assert_equal(%w[ant bear cat].my_all?(/t/), %w[ant bear cat].all?(/t/))
   end
 
   def test_my_any?
@@ -47,7 +47,7 @@ class MyEnumerablesTest < Minitest::Test
     assert_equal(%w[ant bear cat].my_any? { |word| word.length >= 4 }, %w[ant bear cat].any? { |word| word.length >= 4 })
     assert_equal([nil, true, 99].my_any?, [nil, true, 99].any?)
     assert_equal([].my_any?, [].any?)
-    #assert_equal(%w[ant bear cat].my_any?(/d/), %w[ant bear cat].any?(/d/))
+    assert_equal(%w[ant bear cat].my_any?(/d/), %w[ant bear cat].any?(/d/))
   end
  
   def test_my_none?
@@ -73,15 +73,15 @@ class MyEnumerablesTest < Minitest::Test
 
   def test_my_map
   	assert_equal([1, 4, 9, 16], [1, 2, 3, 4].my_map { |i| i * i })
-  	#assert_equal([1, 4, 9, 16], (1...4).my_map { |i| i * i })
+  	assert_equal([1, 4, 9, 16], (1..4).my_map { |i| i * i })
   	assert_equal((1..4).map { |i| i * i }, [1, 2, 3, 4].my_map { |i| i * i })
   	assert_equal(["1", "2"], [1, 2].my_map(&:to_s))
   	#assert_equal(["1", "2"], [1, 2].my_map(&:to_s) { |i| i * 2 })
   end
 
   def test_my_inject
-  	assert_equal((5..10).inject(1) { |product, n| product * n }, [5, 6, 7, 8, 9, 10].my_inject(1) { |product, n| product * n })
-    assert_equal(151200, [5, 6, 7, 8, 9, 10].my_inject(1) { |product, n| product * n })
+  	assert_equal((1..3).inject(1) { |product, n| product * n }, (1..3).my_inject(1) { |product, n| product * n })
+    #assert_equal(6, (1..3).my_inject(1) { |product, n| product * n })
   end
 
   def test_multiply_els

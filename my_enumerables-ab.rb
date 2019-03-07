@@ -28,6 +28,7 @@ module Enumerable
 
   def my_all?
     my_each { |item| return false if yield(item) == false } if block_given?
+
     my_each { |item| return false unless item } unless block_given?
     true
   end
