@@ -37,15 +37,6 @@ module Enumerable
       my_each { |item| unless item  then all_true=false; break end }
     end
     all_true
-
-    # if block_given?
-    #   my_each { |item| return false if yield(item) == false }
-    # elsif pattern
-    #   my_each { |item| return false unless item === pattern }
-    # else
-    #   my_each { |item| return false unless item }
-    # end
-    # true
   end
 
   def my_any?(pattern = nil)
@@ -78,8 +69,6 @@ module Enumerable
 
   def my_map
     return to_enum :my_map unless block_given?
-
-    # new_self = is_a?(Range) ? to_a : self
 
     return_arr = []
     my_each { |item| return_arr << yield(item) }

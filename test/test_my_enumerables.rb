@@ -57,7 +57,7 @@ class MyEnumerablesTest < Minitest::Test
   	assert_equal([nil].my_none?, [nil].none?)
   	assert_equal([nil, false].my_none?, [nil, false].none?)
   	assert_equal([nil, false, true].my_none?, [nil, false, true].none?)
-  	#assert_equal(%w{ant bear cat}.my_none?(/d/), %w{ant bear cat}.none?(/d/))
+  	assert_equal(%w{ant bear cat}.my_none?(/d/), %w{ant bear cat}.none?(/d/))
   end
 
   def test_my_count
@@ -76,7 +76,6 @@ class MyEnumerablesTest < Minitest::Test
   	assert_equal([1, 4, 9, 16], (1..4).my_map { |i| i * i })
   	assert_equal((1..4).map { |i| i * i }, [1, 2, 3, 4].my_map { |i| i * i })
   	assert_equal(["1", "2"], [1, 2].my_map(&:to_s))
-  	#assert_equal(["1", "2"], [1, 2].my_map(&:to_s) { |i| i * 2 })
   end
 
   def test_my_inject
