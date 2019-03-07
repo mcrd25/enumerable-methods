@@ -97,13 +97,14 @@ module Enumerable
     #   end
     # end
     # accumulator
-    arg1.is_a?(Integer || Float)
-    accumulator = new_self[0] if arg1.nil? || arg1.is_a?(Symbol)
-    new_self.my_each { |item| accumulator = yield(accumulator, item) }
+    accumulator = (arg1.nil? || arg1.is_a?(Symbol)) ? new_self[0] : arg1
+    new_self.my_each { |item| accumulator = yield(accumulator, item) } if block_given?
     new_self[1..-1].my_each { |i| accumulator = accumulator.send(arg1, i) } if arg1.is_a?(Symbol)
-    new_self[1..-1].my_each { |i| accumulator = accumulator.send(arg1, i) } if arg2.is_a?(Symbol)
+    new_self[0..-1].my_each { |i| accumulator = accumulator.send(arg2, i) } if arg2
     accumulator
   end
+
+
 
   def multiply_els
     my_inject(1) { |total, item| total * item }

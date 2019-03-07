@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-load './my_enumerables.rb'
+load '../my_enumerables.rb'
 
 class MyEnumerablesTest < Minitest::Test
   def test_my_each
@@ -81,7 +81,9 @@ class MyEnumerablesTest < Minitest::Test
 
   def test_my_inject
   	assert_equal((1..3).inject(1) { |product, n| product * n }, (1..3).my_inject(1) { |product, n| product * n })
-    #assert_equal(6, (1..3).my_inject(1) { |product, n| product * n })
+    assert_equal(6, (1..3).my_inject(1) { |product, n| product * n })
+    assert_equal((5..10).inject(1, :*), (5..10).my_inject(1, :*))
+    assert_equal('sheep', %w{ cat sheep bear }.my_inject do |memo, word| memo.length > word.length ? memo : word end)
   end
 
   def test_multiply_els

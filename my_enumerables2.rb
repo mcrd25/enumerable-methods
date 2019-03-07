@@ -80,27 +80,35 @@ module Enumerable
     return_arr
   end
 
-  def my_inject(initial=nil, sym = nil)
+  def my_inject(arg1=nil, arg2 = nil)
     if self.class == Range
         new_self = self.to_a
     else 
         new_self = self
     end
-    memo = new_self[0] if initial == nil
+    memo = (arg1  == nil || arg1.class == Symbol) ? new_self[0] : arg1
     if block_given?
-        new_self[1..-1].my_each { |item| memo = yield(memo, item) } 
-    elsif sym
+      new_self[1..-1].my_each { |item| memo = yield(memo, item) } 
+    elsif arg1 && arg1.class == Symbol
         new_self[1..-1].my_each do |i|
-            memo = memo.send(sym, i)
+            memo = memo.send(arg1, i)
         end
-    else 
-        return to_enum
+    elsif arg2
+      new_self[0..-1].my_each do |i|
+          memo = memo.send(arg2, i)
+      end
     end
     memo
   end
 
 end
-
+arr = [5, 6, 7, 8, 9, 10]
 def multiply_els(arr)
-    return arr.my_inject(:*)
+    return arr.my_inject(1, :*)
 end
+puts multiply_els(arr)
+puts (5..10).my_inject(1, :*)    
+longest = %w{ cat sheep bear }.my_inject do |memo, word|
+   memo.length > word.length ? memo : word
+end
+puts longest
