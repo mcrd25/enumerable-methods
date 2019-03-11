@@ -125,4 +125,99 @@ describe Enumerable do
       expect(%w[ant bear cat].my_any?(/d/)).to eq(%w[ant bear cat].any?(/d/))
     end
   end 
+
+  context '#my_none' do 
+    it 'returns false when all items match a given condition' do
+      expect(%w[ant bear cat].my_none? { |word| word.length >= 3 }).to be false
+    end
+    it 'returns true when all items do not match a given condition' do
+      expect(%w[ant bear cat].my_none? { |word| word.length >= 5 }).to be true
+    end
+
+    it 'returns false when no block given and all items are neither nil or false' do
+      expect([nil, true, false].my_none?).to eq false
+    end
+
+    it 'returns true when no block given with an empty array' do
+      expect([].my_none?).to eq true
+    end
+
+    it 'returns true when all items do not match a given pattern' do
+      expect(%w[ant bear cat].my_none?(/d/)).to eq true
+    end
+
+    it 'all above-mentioned tests match the official enumerable method counterpart' do
+      expect(%w[ant bear cat].my_none? { |word| word.length >= 3 }).to eq(%w[ant bear cat].none? { |word| word.length >= 3 })
+      expect(%w[ant bear cat].my_none? { |word| word.length >= 5 }).to eq(%w[ant bear cat].none? { |word| word.length >= 5 })
+      expect([nil, true, false].my_none?).to eq([nil, true, false].none?)
+      expect([].my_none?).to eq([].none?)
+      expect(%w[ant bear cat].my_none?(/d/)).to eq(%w[ant bear cat].none?(/d/))
+    end
+  end
+  
+  context '#my_count' do
+    it 'returns array length when no block given' do
+      expect([1, 2, 3, 4].my_count).to eq 4
+    end
+
+    it 'returns number of items in array when item is an argument' do 
+      expect([1, 2, 4, 2].my_count(2)).to eq 2
+    end
+
+    it 'returns number of items matching when given a block condition' do
+      expect([1, 2, 4, 2].my_count(&:even?)).to eq 3
+    end    
+
+    it 'all above-mentioned tests match the official enumerable method counterpart' do
+      expect([1, 2, 3, 4].my_count).to eq([1, 2, 3, 4].count)
+      expect([1, 2, 4, 2].my_count(2)).to eq([1, 2, 4, 2].count(2))
+      expect([1, 2, 4, 2].my_count(&:even?)).to eq([1, 2, 4, 2].count(&:even?))
+    end
+  end
+
+  context '#my_map' do
+    it 'returns a modified array resulting from block operation' do
+      expect([1, 2, 3, 4].my_map { |i| i * i }).to eq [1, 4, 9, 16]
+    end
+
+    it 'returns modified array when given a range with a block' do
+      expect((1..4).my_map { |i| i * i }).to eq [1, 4, 9, 16]
+    end
+
+    it 'returns array of strings when given array of integers' do
+      expect([1, 2].my_map(&:to_s)).to eq ['1', '2']
+    end
+
+    it 'all above-mentioned tests match the official enumerable method counterpart' do
+      expect([1, 2].my_map(&:to_s)).to eq([1, 2].map(&:to_s))
+      expect((1..4).my_map { |i| i * i }).to eq((1..4).map { |i| i * i })
+      expect([1, 2, 3, 4].my_map { |i| i * i }).to eq([1, 2, 3, 4].map { |i| i * i })
+    end
+  end
+
+  context '#my_inject' do
+    it 'returns the accumulative result when given a starting value and a block operation' do
+      expect((1..3).my_inject(1) { |product, n| product * n }).to eq 6
+    end
+
+    it 'returns the accumulative result when given starting value and a urnary operator' do
+      expect((5..10).my_inject(1, :*)).to eq 151200
+    end
+
+    it 'returns result when given a block condition against a neighboring item' do
+      expect(%w{ cat sheep bear }.my_inject { |memo, word| memo.length > word.length ? memo : word }).to eq 'sheep'
+    end
+    
+    it 'all above-mentioned tests match the official enumerable method counterpart' do
+      expect((1..3).my_inject(1) { |product, n| product * n }).to eq((1..3).inject(1) { |product, n| product * n })
+      expect((5..10).my_inject(1, :*)).to eq((5..10).inject(1, :*))
+      expect(%w{ cat sheep bear }.my_inject { |memo, word| memo.length > word.length ? memo : word }).to eq(%w{ cat sheep bear }.inject { |memo, word| memo.length > word.length ? memo : word })
+    end
+  end
+
+  context '#multiply_els' do
+    it 'returns result of function that uses #my_inject to multiply all items' do
+      expect([2, 4, 5].multiply_els).to eq 40
+    end
+  end
 end
