@@ -198,6 +198,7 @@ describe Enumerable do
   context '#my_inject' do
     it 'returns the accumulative result when given a starting value and a block operation' do
       expect((1..3).my_inject(1) { |product, n| product * n }).to eq 6
+      expect([1, 2, 3, 4, 5].my_inject {|acc, val| acc + val}).to eq 15
     end
 
     it 'returns the accumulative result when given starting value and a urnary operator' do
@@ -210,9 +211,11 @@ describe Enumerable do
     
     it 'all above-mentioned tests match the official enumerable method counterpart' do
       expect((1..3).my_inject(1) { |product, n| product * n }).to eq((1..3).inject(1) { |product, n| product * n })
+      expect([1, 2, 3, 4, 5].my_inject {|acc, val| acc + val}).to eq([1, 2, 3, 4, 5].inject {|acc, val| acc + val})
       expect((5..10).my_inject(1, :*)).to eq((5..10).inject(1, :*))
       expect(%w{ cat sheep bear }.my_inject { |memo, word| memo.length > word.length ? memo : word }).to eq(%w{ cat sheep bear }.inject { |memo, word| memo.length > word.length ? memo : word })
     end
+
   end
 
   context '#multiply_els' do

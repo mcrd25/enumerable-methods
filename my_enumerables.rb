@@ -78,8 +78,9 @@ module Enumerable
   def my_inject(arg1 = nil, arg2 = nil)
     new_self = is_a?(Range) ? to_a : self
     accumulator = (arg1.nil? || arg1.is_a?(Symbol)) ? new_self[0] : arg1
-    new_self.my_each { |item| accumulator = yield(accumulator, item) } if block_given?
-    new_self[1..-1].my_each { |i| accumulator = accumulator.send(arg1, i) } if arg1.is_a?(Symbol)
+    new_self[0..-1].my_each { |item| accumulator = yield(accumulator, item) } if block_given? && arg1
+    new_self[1..-1].my_each { |item| accumulator = yield(accumulator, item) } if block_given? && !arg1
+    new_self[1..-1].my_each { |i| accumulator = accumulator.send(arg1, i) } if arg1.is_a?(Symbol) 
     new_self[0..-1].my_each { |i| accumulator = accumulator.send(arg2, i) } if arg2
     accumulator
   end
@@ -88,3 +89,5 @@ module Enumerable
     my_inject(1) { |total, item| total * item }
   end
 end
+
+puts [2, 4, 5].multiply_els
