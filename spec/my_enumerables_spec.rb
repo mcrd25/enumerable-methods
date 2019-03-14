@@ -2,7 +2,7 @@ require './my_enumerables.rb'
 
 describe Enumerable do
   let(:test_arr) { [1, 2, 3] }
-  context '#my_each' do
+  describe '#my_each' do
     it 'returns original array when no output' do
       expect(test_arr.my_each { |i| i * 2 }).to eq(test_arr)
     end
@@ -21,7 +21,7 @@ describe Enumerable do
     end
   end
 
-  context '#my_each_with_index' do
+  describe '#my_each_with_index' do
     it 'returns original array when no output' do
       expect(test_arr.my_each_with_index { |i| i * 2 }).to eq(test_arr)
     end
@@ -41,7 +41,7 @@ describe Enumerable do
     end
   end
 
-  context '#my_select' do
+  describe '#my_select' do
     it 'returns even numbers from array of numbers' do
       expect(test_arr.my_select(&:even?)).to eq([2])
     end
@@ -58,7 +58,7 @@ describe Enumerable do
 
   let(:ant_bear_cat) { %w[ant bear cat] }
 
-  context '#my_all?' do 
+  describe '#my_all?' do 
     it 'returns true when all array items match given condition' do
       expect(ant_bear_cat.my_all? { |word| word.length >= 3 }).to be true
     end
@@ -98,7 +98,7 @@ describe Enumerable do
     end
   end
 
-  context '#my_any' do 
+  describe '#my_any' do 
     it 'returns true when at least one item matches given condition' do
       expect(ant_bear_cat.my_any? { |word| word.length >= 3 }).to be true
     end
@@ -126,8 +126,7 @@ describe Enumerable do
       expect(ant_bear_cat.my_any?(/d/)).to eq(ant_bear_cat.any?(/d/))
     end
   end 
-
-  context '#my_none' do 
+describe '#my_none' do 
     it 'returns false when all items match a given condition' do
       expect(ant_bear_cat.my_none? { |word| word.length >= 3 }).to be false
     end
@@ -156,7 +155,7 @@ describe Enumerable do
     end
   end
   
-  context '#my_count' do
+  describe '#my_count' do
     it 'returns array length when no block given' do
       expect(test_arr.my_count).to eq(3)
     end
@@ -178,8 +177,7 @@ describe Enumerable do
 
   let(:test_range) { (1..4) }
 
-  context '#my_map' do
-    
+  describe '#my_map' do
     it 'returns a modified array resulting from block operation' do
       expect(test_arr.my_map { |i| i * i }).to eq([1, 4, 9])
     end
@@ -199,7 +197,7 @@ describe Enumerable do
     end
   end
 
-  context '#my_inject' do
+  describe '#my_inject' do
     let(:cat_sheep_bear) { %w{ cat sheep bear } }
     it 'returns the accumulative result when given a starting value and a block operation' do
       expect(test_range.my_inject(1) { |product, n| product * n }).to eq(24)
@@ -220,7 +218,7 @@ describe Enumerable do
     end
   end
 
-  context '#multiply_els' do
+  describe '#multiply_els' do
     it 'returns result of function that uses #my_inject to multiply all items' do
       expect(test_arr.multiply_els).to eq(6)
     end
