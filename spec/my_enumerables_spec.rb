@@ -2,9 +2,11 @@ require './my_enumerables.rb'
 
 describe Enumerable do
   let(:test_arr) { [1, 2, 3] }
+  let(:test_block) { proc { |i| i * 2 } }
+
   describe '#my_each' do
     it 'returns original array when no output' do
-      expect(test_arr.my_each { |i| i * 2 }).to eq(test_arr)
+      expect(test_arr.my_each { test_block }).to eq(test_arr)
     end
 
     it 'prints result to stdout from block calculation i * 2' do
@@ -16,14 +18,14 @@ describe Enumerable do
     end
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
-      expect(test_arr.my_each { |i| i * 2 }).to eq(test_arr.each { |i| i * 2 })
+      expect(test_arr.my_each { test_block }).to eq(test_arr.each { test_block })
       expect(test_arr.my_each.is_a?(Enumerator)).to eq(test_arr.each.is_a?(Enumerator))
     end
   end
 
   describe '#my_each_with_index' do
     it 'returns original array when no output' do
-      expect(test_arr.my_each_with_index { |i| i * 2 }).to eq(test_arr)
+      expect(test_arr.my_each_with_index { test_block }).to eq(test_arr)
     end
 
     it 'prints item and index to stdout from block' do
@@ -36,7 +38,7 @@ describe Enumerable do
     end
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
-      expect(test_arr.my_each_with_index { |i| i * 2 }).to eq([1, 2, 3].each_with_index { |i| i * 2 })
+      expect(test_arr.my_each_with_index { test_block }).to eq([1, 2, 3].each_with_index { |i| i * 2 })
       expect(test_arr.my_each_with_index.is_a?(Enumerator)).to eq([1, 2, 3].each_with_index.is_a?(Enumerator))
     end
   end
@@ -98,6 +100,9 @@ describe Enumerable do
     end
   end
 
+  let(:len_block_three) { |word| word.length >= 3 }
+  let(:len_block_five) { |word| word.length >= 5 }
+
   describe '#my_any' do 
     it 'returns true when at least one item matches given condition' do
       expect(ant_bear_cat.my_any? { |word| word.length >= 3 }).to be true
@@ -120,12 +125,13 @@ describe Enumerable do
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
       expect(ant_bear_cat.my_any? { |word| word.length >= 3 }).to eq(ant_bear_cat.any? { |word| word.length >= 3 })
-      expect(ant_bear_cat.my_any? { |word| word.length >= 5 }).to eq(ant_bear_cat.any? { |word| word.length >= 5 })
+      expect(ant_bear_cat.my_any? { |word| word.length >= 5  }).to eq(ant_bear_cat.any? { |word| word.length >= 5 })
       expect([nil, true, false].my_any?).to eq([nil, true, false].any?)
       expect([].my_any?).to eq([].any?)
       expect(ant_bear_cat.my_any?(/d/)).to eq(ant_bear_cat.any?(/d/))
     end
   end 
+  
 describe '#my_none' do 
     it 'returns false when all items match a given condition' do
       expect(ant_bear_cat.my_none? { |word| word.length >= 3 }).to be false
@@ -192,8 +198,8 @@ describe '#my_none' do
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
       expect(test_arr.my_map(&:to_s)).to eq(test_arr.map(&:to_s))
-      expect(test_range.my_map { |i| i * i }).to eq((1..4).map { |i| i * i })
-      expect(test_arr.my_map { |i| i * i }).to eq(test_arr.map { |i| i * i })
+      expect(test_range.my_map { test_block }).to eq((1..4).map { test_block })
+      expect(test_arr.my_map { test_block }).to eq(test_arr.map { test_block })
     end
   end
 
@@ -210,7 +216,7 @@ describe '#my_none' do
     it 'returns result when given a block condition against a neighboring item' do
       expect(cat_sheep_bear.my_inject { |memo, word| memo.length > word.length ? memo : word }).to eq 'sheep'
     end
-    
+  
     it 'all above-mentioned tests match the official enumerable method counterpart' do
       expect(test_range.my_inject(1) { |product, n| product * n }).to eq(test_range.inject(1) { |product, n| product * n })
       expect(test_range.my_inject(1, :*)).to eq(test_range.inject(1, :*))
