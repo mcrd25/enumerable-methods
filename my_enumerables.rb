@@ -89,5 +89,3 @@ module Enumerable
     my_inject(1) { |total, item| total * item }
   end
 end
-
-puts [2, 4, 5].multiply_els
