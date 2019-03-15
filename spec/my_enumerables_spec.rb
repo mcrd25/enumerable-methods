@@ -3,6 +3,12 @@ require './my_enumerables.rb'
 describe Enumerable do
   let(:test_arr) { [1, 2, 3] }
   let(:test_block) { proc { |i| i * 2 } }
+  let(:ant_bear_cat) { %w[ant bear cat] }
+  let(:len_block_three) { proc { |word| word.length >= 3 } }
+  let(:len_block_five) { proc { |word| word.length >= 5 }  }
+  let(:test_range) { (1..4) }
+  let(:test_absolutes) { [nil, true, false] }
+  let(:test_numeric) { [1, 2i, 3.14] }
 
   describe '#my_each' do
     it 'returns original array when no output' do
@@ -29,7 +35,7 @@ describe Enumerable do
     end
 
     it 'prints item and index to stdout from block' do
-      expect { test_arr.my_each_with_index {|i, index| print i, index} }.to output(/102132/).to_stdout
+      expect { test_arr.my_each_with_index {|i, index| print i, index } }.to output(/102132/).to_stdout
       
     end
 
@@ -38,8 +44,8 @@ describe Enumerable do
     end
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
-      expect(test_arr.my_each_with_index { test_block }).to eq([1, 2, 3].each_with_index { |i| i * 2 })
-      expect(test_arr.my_each_with_index.is_a?(Enumerator)).to eq([1, 2, 3].each_with_index.is_a?(Enumerator))
+      expect(test_arr.my_each_with_index { test_block }).to eq(test_arr.each_with_index { test_block })
+      expect(test_arr.my_each_with_index.is_a?(Enumerator)).to eq(test_arr.each_with_index.is_a?(Enumerator))
     end
   end
 
@@ -58,23 +64,23 @@ describe Enumerable do
     end
   end
 
-  let(:ant_bear_cat) { %w[ant bear cat] }
+  
 
   describe '#my_all?' do 
     it 'returns true when all array items match given condition' do
-      expect(ant_bear_cat.my_all? { |word| word.length >= 3 }).to be true
+      expect(ant_bear_cat.my_all?(&len_block_three)).to be true
     end
 
     it 'returns false when all array items does not match given condition' do
-      expect(ant_bear_cat.my_all? { |word| word.length >= 4 }).to be false
+      expect(ant_bear_cat.my_all?(&len_block_five)).to be false
     end
 
     it 'returns false when no block given and one item is nil or false' do 
-      expect([nil, true, 99].my_all?).to be false
+      expect(test_absolutes.my_all?).to be false
     end
 
     it 'returns true when no block given all items are neither nil or false' do 
-      expect([0, 1, 2].my_all?).to be true
+      expect(test_arr.my_all?).to be true
     end
 
     it 'returns true with an empty array (it is neither false or nil)' do
@@ -82,7 +88,7 @@ describe Enumerable do
     end
 
     it 'returns true when all array items are of a given type' do
-      expect([1, 2i, 3.14].my_all?(Numeric)).to be true
+      expect(test_numeric.my_all?(Numeric)).to be true
     end
 
     it 'returns false when all array items do not match a given pattern' do
@@ -90,29 +96,26 @@ describe Enumerable do
     end
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
-      expect(ant_bear_cat.my_all? { |word| word.length >= 3 }).to eq(%w[ant bear cat].all? { |word| word.length >= 3 })
-      expect(ant_bear_cat.my_all? { |word| word.length >= 4 }).to eq(%w[ant bear cat].all? { |word| word.length >= 4 })
-      expect([nil, true, 99].my_all?).to eq([nil, true, 99].all?)
-      expect([0, 1, 2].my_all?).to eq([0, 1, 2].all?)
+      expect(ant_bear_cat.my_all?(&len_block_three)).to eq(%w[ant bear cat].all?(&len_block_three))
+      expect(ant_bear_cat.my_all?(&len_block_five)).to eq(%w[ant bear cat].all?(&len_block_five))
+      expect(test_absolutes.my_all?).to eq(test_absolutes.all?)
+      expect(test_arr.my_all?).to eq(test_arr.all?)
       expect([].my_all?).to eq([].all?)
-      expect([1, 2i, 3.14].my_all?(Numeric)).to eq([1, 2i, 3.14].my_all?(Numeric))
+      expect(test_numeric.my_all?(Numeric)).to eq(test_numeric.my_all?(Numeric))
       expect(ant_bear_cat.my_all?(/t/)).to eq(%w[ant bear cat].all?(/t/))
     end
   end
 
-  let(:len_block_three) { |word| word.length >= 3 }
-  let(:len_block_five) { |word| word.length >= 5 }
-
   describe '#my_any' do 
     it 'returns true when at least one item matches given condition' do
-      expect(ant_bear_cat.my_any? { |word| word.length >= 3 }).to be true
+      expect(ant_bear_cat.my_any?(&len_block_three)).to be true
     end
     it 'returns false when no item matches given condition' do
-      expect(ant_bear_cat.my_any? { |word| word.length >= 5 }).to be false
+      expect(ant_bear_cat.my_any?(&len_block_five)).to be false
     end
 
     it 'returns true when no block given and at least one item neither nil or false' do
-      expect([nil, true, false].my_any?).to eq true
+      expect(test_absolutes.my_any?).to eq true
     end
 
     it 'returns false when given an empty array (at least one item being neither nil or false)' do
@@ -124,9 +127,9 @@ describe Enumerable do
     end
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
-      expect(ant_bear_cat.my_any? { |word| word.length >= 3 }).to eq(ant_bear_cat.any? { |word| word.length >= 3 })
-      expect(ant_bear_cat.my_any? { |word| word.length >= 5  }).to eq(ant_bear_cat.any? { |word| word.length >= 5 })
-      expect([nil, true, false].my_any?).to eq([nil, true, false].any?)
+      expect(ant_bear_cat.my_any?(&len_block_three)).to eq(ant_bear_cat.any?(&len_block_three))
+      expect(ant_bear_cat.my_any?(&len_block_five)).to eq(ant_bear_cat.any?(&len_block_five))
+      expect(test_absolutes.my_any?).to eq(test_absolutes.any?)
       expect([].my_any?).to eq([].any?)
       expect(ant_bear_cat.my_any?(/d/)).to eq(ant_bear_cat.any?(/d/))
     end
@@ -134,14 +137,14 @@ describe Enumerable do
   
 describe '#my_none' do 
     it 'returns false when all items match a given condition' do
-      expect(ant_bear_cat.my_none? { |word| word.length >= 3 }).to be false
+      expect(ant_bear_cat.my_none?(len_block_three)).to be false
     end
     it 'returns true when all items do not match a given condition' do
-      expect(ant_bear_cat.my_none? { |word| word.length >= 5 }).to be true
+      expect(ant_bear_cat.my_none?(len_block_five)).to be true
     end
 
     it 'returns false when no block given and all items are neither nil or false' do
-      expect([nil, true, false].my_none?).to eq false
+      expect(test_absolutes.my_none?).to eq false
     end
 
     it 'returns true when no block given with an empty array' do
@@ -153,9 +156,9 @@ describe '#my_none' do
     end
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
-      expect(ant_bear_cat.my_none? { |word| word.length >= 3 }).to eq(ant_bear_cat.none? { |word| word.length >= 3 })
-      expect(ant_bear_cat.my_none? { |word| word.length >= 5 }).to eq(ant_bear_cat.none? { |word| word.length >= 5 })
-      expect([nil, true, false].my_none?).to eq([nil, true, false].none?)
+      expect(ant_bear_cat.my_none?(&len_block_three)).to eq(ant_bear_cat.none?(&len_block_three))
+      expect(ant_bear_cat.my_none?(&len_block_five)).to eq(ant_bear_cat.none?(&len_block_five))
+      expect(test_absolutes.my_none?).to eq(test_absolutes.none?)
       expect([].my_none?).to eq([].none?)
       expect(ant_bear_cat.my_none?(/d/)).to eq(ant_bear_cat.none?(/d/))
     end
@@ -181,15 +184,13 @@ describe '#my_none' do
     end
   end
 
-  let(:test_range) { (1..4) }
-
   describe '#my_map' do
     it 'returns a modified array resulting from block operation' do
-      expect(test_arr.my_map { |i| i * i }).to eq([1, 4, 9])
+      expect(test_arr.my_map(&test_block)).to eq([2, 4, 6])
     end
 
     it 'returns modified array when given a range with a block' do
-      expect(test_range.my_map { |i| i * i }).to eq([1, 4, 9, 16])
+      expect(test_range.my_map(&test_block)).to eq([2, 4, 6, 8])
     end
 
     it 'returns array of strings when given array of integers' do
@@ -198,7 +199,7 @@ describe '#my_none' do
 
     it 'all above-mentioned tests match the official enumerable method counterpart' do
       expect(test_arr.my_map(&:to_s)).to eq(test_arr.map(&:to_s))
-      expect(test_range.my_map { test_block }).to eq((1..4).map { test_block })
+      expect(test_range.my_map { test_block }).to eq(test_range.map { test_block })
       expect(test_arr.my_map { test_block }).to eq(test_arr.map { test_block })
     end
   end
