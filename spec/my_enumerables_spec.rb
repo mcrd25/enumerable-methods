@@ -64,8 +64,6 @@ describe Enumerable do
     end
   end
 
-  
-
   describe '#my_all?' do 
     it 'returns true when all array items match given condition' do
       expect(ant_bear_cat.my_all?(&len_block_three)).to be true
